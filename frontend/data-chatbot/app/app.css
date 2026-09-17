@@ -1,0 +1,26 @@
+@import './globals.css';
+
+/* Chatbot layout base */
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Chat area scrollbar */
+.chat-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-scroll::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.chat-scroll::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}

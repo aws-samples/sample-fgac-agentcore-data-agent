@@ -1,0 +1,117 @@
+{
+  "tools": [
+    {
+      "name": "get_greeting",
+      "description": "Returns a personalized greeting message for the given name",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the person to greet"
+          }
+        },
+        "required": ["name"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "The greeting message"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of the operation"
+          }
+        }
+      }
+    },
+    {
+      "name": "get_system_info",
+      "description": "Returns information about the FGAC Data Agent service including version and available tools",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "service": {
+            "type": "string",
+            "description": "Name of the service"
+          },
+          "version": {
+            "type": "string",
+            "description": "Version of the service"
+          },
+          "status": {
+            "type": "string",
+            "description": "Health status of the service"
+          },
+          "available_tools": {
+            "type": "array",
+            "description": "List of available tool names",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "execute_query",
+      "description": "Executes an Athena SQL query and returns the results",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sql": {
+            "type": "string",
+            "description": "The SQL statement to execute"
+          },
+          "database": {
+            "type": "string",
+            "description": "The database name to query (optional, defaults to tickit2)"
+          }
+        },
+        "required": ["sql"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the query succeeded"
+          },
+          "query_id": {
+            "type": "string",
+            "description": "The Athena query execution ID"
+          },
+          "database": {
+            "type": "string",
+            "description": "The database that was queried"
+          },
+          "columns": {
+            "type": "array",
+            "description": "List of column names",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rows": {
+            "type": "array",
+            "description": "Query result rows",
+            "items": {
+              "type": "object"
+            }
+          },
+          "row_count": {
+            "type": "integer",
+            "description": "Number of rows returned"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+[project]
+name = "fgac-infra"
+version = "0.1.0"
+description = "CDK infrastructure for FGAC Data Agent"
+requires-python = ">=3.11"
+dependencies = [
+    "aws-cdk-lib>=2.170.0",
+    "constructs>=10.0.0",
+]
+
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["stacks*"]

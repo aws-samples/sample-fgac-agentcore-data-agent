@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-03-24" type="device" pages="3">
+  <diagram id="auth-token-flow" name="1. Authentication &amp; Token Flow">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- User -->
+        <mxCell id="user1" value="User&#xa;(TeamA / TeamB)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.user;labelBackgroundColor=none;sketch=0;fontStyle=1;fontSize=12;fillColor=#D5E8D4;strokeColor=#82B366;" vertex="1" parent="1">
+          <mxGeometry x="60" y="40" width="120" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Cognito User Pool -->
+        <mxCell id="cognito1" value="Cognito User Pool&#xa;&#xa;USER_PASSWORD_AUTH" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="360" y="30" width="200" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- User → Cognito -->
+        <mxCell id="e1" value="InitiateAuth" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.3;entryX=0;entryY=0.3;" edge="1" source="user1" target="cognito1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Cognito → User -->
+        <mxCell id="e2" value="Access Token + ID Token&#xa;(ID Token has custom:team)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;exitX=0;exitY=0.7;entryX=1;entryY=0.7;dashed=1;" edge="1" source="cognito1" target="user1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- AgentCore Runtime -->
+        <mxCell id="runtime1" value="Bedrock AgentCore Runtime&#xa;&#xa;• Validates access_token via JWT Authorizer (Cognito OIDC)&#xa;• Passes allowed headers to agent code" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="200" width="340" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- User → Runtime -->
+        <mxCell id="e3" value="POST /runtimes/{agentARN}/invocations&#xa;Headers: Authorization, X-Amzn-...-X-ID-Token" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" edge="1" source="user1" target="runtime1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Strands Agent -->
+        <mxCell id="agent1" value="Strands Agent (main.py)&#xa;&#xa;• Extracts both tokens from context.request_headers&#xa;• Creates MCP client with auth headers&#xa;• LLM decides which MCP tools to call" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="370" width="340" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- Runtime → Agent -->
+        <mxCell id="e4" value="context.request_headers&#xa;(headers lowercased by runtime)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" edge="1" source="runtime1" target="agent1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- MCP Gateway -->
+        <mxCell id="gateway1" value="AgentCore MCP Gateway&#xa;&#xa;• Validates JWT&#xa;• Routes to interceptor&#xa;• Forwards X-ID-Token" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="550" width="340" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- Agent → Gateway -->
+        <mxCell id="e5" value="Streamable HTTP&#xa;Headers: Authorization + X-ID-Token" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" edge="1" source="agent1" target="gateway1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Interceptor Lambda -->
+        <mxCell id="interceptor1" value="Interceptor Lambda&#xa;(gateway-interceptor)&#xa;&#xa;• Passes through Authorization + X-ID-Token&#xa;• Returns transformedGatewayRequest" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="720" width="340" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- Gateway → Interceptor -->
+        <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" edge="1" source="gateway1" target="interceptor1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Target Lambda -->
+        <mxCell id="target1" value="Target Lambda&#xa;(gateway-target)&#xa;&#xa;• Reads X-ID-Token from propagated headers&#xa;• Resolves tool name from context&#xa;• Exchanges token via Identity Pool" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="890" width="340" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- Interceptor → Target -->
+        <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" edge="1" source="interceptor1" target="target1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Header notes -->
+        <mxCell id="note1" value="Key Header Propagation:&#xa;&#xa;1. Runtime lowercases custom headers&#xa;2. Gateway target needs X-ID-Token in allowedRequestHeaders&#xa;3. Agent YAML needs X-Amzn-...-X-ID-Token in requestHeaderAllowlist&#xa;4. Interceptor reads from event.mcp.gatewayRequest.headers&#xa;5. Target reads from context.client_context.custom.bedrockAgentCorePropagatedHeaders" style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#FFF9E6;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=8;verticalAlign=top;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="500" y="200" width="420" height="140" as="geometry"/>
+        </mxCell>
+
+        <!-- Token table note -->
+        <mxCell id="note2" value="Two Tokens, Two Purposes:&#xa;&#xa;Access Token → Authenticates API request&#xa;  Used by: AgentCore JWT Authorizer, MCP Gateway&#xa;&#xa;ID Token → Carries custom:team claim for role mapping&#xa;  Used by: Target Lambda → Identity Pool" style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#FFF9E6;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=8;verticalAlign=top;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="500" y="400" width="380" height="130" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram id="identity-pool-exchange" name="2. Identity Pool Token Exchange">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Target Lambda -->
+        <mxCell id="tl2" value="Target Lambda&#xa;(gateway-target)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="60" y="160" width="260" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 1: get_id -->
+        <mxCell id="step1" value="1. cognito_identity.get_id()&#xa;&#xa;Logins: { provider_name: id_token }" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="280" width="260" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Cognito Identity Pool -->
+        <mxCell id="idpool" value="Cognito Identity Pool&#xa;&#xa;Rules-based role mapping:&#xa;custom:team = &quot;Team A&quot; → TeamA IAM Role&#xa;custom:team = &quot;Team B&quot; → TeamB IAM Role" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="500" y="220" width="320" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 1 → Identity Pool -->
+        <mxCell id="e2_1" value="get_id()" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" edge="1" source="step1" target="idpool" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 2: get_credentials_for_identity -->
+        <mxCell id="step2" value="2. cognito_identity.get_credentials_for_identity()&#xa;&#xa;Returns: AccessKeyId, SecretKey, SessionToken&#xa;(scoped to TeamA or TeamB IAM role)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="410" width="340" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Identity Pool → Step 2 -->
+        <mxCell id="e2_2" value="IAM credentials" style="edgeStyle=orthogonalEdgeStyle;rounded=0;dashed=1;" edge="1" source="idpool" target="step2" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- boto3 Session -->
+        <mxCell id="session2" value="boto3.Session&#xa;(team-scoped credentials)&#xa;&#xa;Ready for Athena queries" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="550" width="260" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 2 → Session -->
+        <mxCell id="e2_3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" edge="1" source="step2" target="session2" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- TL → Step 1 -->
+        <mxCell id="e2_0" value="has X-ID-Token" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" edge="1" source="tl2" target="step1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- TeamA Role -->
+        <mxCell id="roleA" value="TeamA IAM Role&#xa;&#xa;LF Tags: team=TeamA, team=shared" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="500" y="400" width="280" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- TeamB Role -->
+        <mxCell id="roleB" value="TeamB IAM Role&#xa;&#xa;LF Tags: team=TeamB, team=shared" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="500" y="490" width="280" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Identity Pool → Roles -->
+        <mxCell id="e2_4" value="maps to" style="edgeStyle=orthogonalEdgeStyle;rounded=0;dashed=1;" edge="1" source="idpool" target="roleA" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2_5" value="maps to" style="edgeStyle=orthogonalEdgeStyle;rounded=0;dashed=1;" edge="1" source="idpool" target="roleB" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram id="query-execution-flow" name="3. Query Execution Flow">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Target Lambda -->
+        <mxCell id="tl3" value="Target Lambda&#xa;(team-scoped session)&#xa;&#xa;athena.start_query_execution(sql)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="60" width="280" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Athena -->
+        <mxCell id="athena3" value="Amazon Athena&#xa;&#xa;Executes SQL against Glue tables" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="220" width="280" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- TL → Athena -->
+        <mxCell id="e3_1" value="StartQueryExecution" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" edge="1" source="tl3" target="athena3" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Glue Catalog -->
+        <mxCell id="glue3" value="Glue Data Catalog&#xa;&#xa;tickit2 database" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="480" y="220" width="200" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Athena → Glue -->
+        <mxCell id="e3_2" value="table metadata" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" edge="1" source="athena3" target="glue3" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Lake Formation TBAC -->
+        <mxCell id="lf3" value="Lake Formation TBAC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=13;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="60" y="370" width="620" height="200" as="geometry"/>
+        </mxCell>
+
+        <!-- Table-level box -->
+        <mxCell id="lf_table" value="Table-level (LF Tags):&#xa;&#xa;TeamA Role → team=TeamA, team=shared&#xa;TeamB Role → team=TeamB, team=shared" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=8;verticalAlign=top;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="80" y="410" width="270" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Row-level box -->
+        <mxCell id="lf_row" value="Row-level (Data Cell Filters on sales_extended):&#xa;&#xa;TeamA → WHERE team = 'Team A'&#xa;TeamB → WHERE team = 'Team B'" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=8;verticalAlign=top;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="380" y="410" width="280" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Athena → LF -->
+        <mxCell id="e3_3" value="LF checks IAM role's tag permissions" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" edge="1" source="athena3" target="lf3" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- S3 Data Lake -->
+        <mxCell id="s3_3" value="S3 Data Lake" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="60" y="650" width="620" height="180" as="geometry"/>
+        </mxCell>
+
+        <!-- S3 table boxes -->
+        <mxCell id="s3_shared1" value="users/&#xa;(shared)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="80" y="700" width="90" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3_shared2" value="date/&#xa;(shared)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="185" y="700" width="90" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3_teamA" value="venue/&#xa;(TeamA only)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="290" y="700" width="90" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3_teamB1" value="category/&#xa;(TeamB only)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="395" y="700" width="90" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3_teamB2" value="listing/&#xa;(TeamB only)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="500" y="700" width="90" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3_filtered" value="sales_extended/&#xa;(row-filtered per team)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="200" y="770" width="260" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- LF → S3 -->
+        <mxCell id="e3_4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" edge="1" source="lf3" target="s3_3" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Response path note -->
+        <mxCell id="resp3" value="Response flows back:&#xa;Target Lambda → Gateway → Agent → AgentCore Runtime → User" style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#FFF9E6;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="60" y="880" width="460" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- S3 path label -->
+        <mxCell id="s3path" value="s3://lakehouse-bucket/tickit2/" style="text;html=1;fontSize=10;fontStyle=2;fillColor=none;align=left;" vertex="1" parent="1">
+          <mxGeometry x="80" y="670" width="200" height="20" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
