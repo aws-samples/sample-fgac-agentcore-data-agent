@@ -1,0 +1,68 @@
+default_agent: fgacdataagent
+agents:
+  fgacdataagent:
+    name: fgacdataagent
+    entrypoint: src/main.py
+    deployment_type: direct_code_deploy
+    runtime_type: PYTHON_3_11
+    platform: linux/arm64
+    container_runtime: null
+    source_path: .
+    aws:
+      execution_role: arn:aws:iam::144608043951:role/AmazonBedrockAgentCoreSDKRuntime-ap-southeast-1-75f7871943
+      execution_role_auto_create: false
+      account: '144608043951'
+      region: ap-southeast-1
+      ecr_repository: null
+      ecr_auto_create: false
+      s3_path: s3://bedrock-agentcore-codebuild-sources-144608043951-ap-southeast-1
+      s3_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+        network_mode_config: null
+      protocol_configuration:
+        server_protocol: HTTP
+      observability:
+        enabled: true
+      lifecycle_configuration:
+        idle_runtime_session_timeout: null
+        max_lifetime: null
+    bedrock_agentcore:
+      agent_id: fgacdataagent-DbARJpHZ7d
+      agent_arn: arn:aws:bedrock-agentcore:ap-southeast-1:144608043951:runtime/fgacdataagent-DbARJpHZ7d
+      agent_session_id: null
+    codebuild:
+      project_name: null
+      execution_role: null
+      source_bucket: null
+    memory:
+      mode: STM_AND_LTM
+      memory_id: fgacdataagent_mem-4WJ3aa8gzP
+      memory_arn: null
+      memory_name: fgacdataagent_memory
+      event_expiry_days: 30
+      first_invoke_memory_check_done: false
+      was_created_by_toolkit: false
+    identity:
+      credential_providers: []
+      workload: null
+    aws_jwt:
+      enabled: false
+      audiences: []
+      signing_algorithm: ES384
+      issuer_url: null
+      duration_seconds: 300
+    authorizer_configuration:
+      customJWTAuthorizer:
+        discoveryUrl: https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_RwOZXko1X/.well-known/openid-configuration
+        allowedClients:
+        - 2nlidss9mhthdue2srsqgv0tsk
+        - 7umms45ua7otg8e83f72urj69m
+    request_header_configuration:
+      requestHeaderAllowlist:
+      - Authorization
+      - X-Amzn-Bedrock-AgentCore-Runtime-Custom-X-ID-Token
+    oauth_configuration: null
+    api_key_env_var_name: null
+    api_key_credential_provider_name: null
+    is_generated_by_agentcore_create: false

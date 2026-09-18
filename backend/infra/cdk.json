@@ -1,0 +1,22 @@
+{
+  "app": "python3 app.py",
+  "output": "cdk.out",
+  "context": {
+    "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
+    "@aws-cdk/core:checkSecretUsage": true,
+    "@aws-cdk/core:stackRelativeExports": true,
+    "@aws-cdk/customresources:installLatestAwsSdkDefault": false,
+
+    "projectName": "fgac-data-agent",
+    "dataLake": {
+      "databaseName": "tickit2",
+      "dataBucketPrefix": "lakehouse-bucket",
+      "dataPrefix": "tickit2"
+    },
+    "cognitousers": [
+        {"username": "TeamAUser", "email": "name+teama@example.com", "team": "Team A", "passwordEnv": "TEAM_A_PASSWORD"},
+        {"username": "TeamBUser", "email": "name+teamb@example.com", "team": "Team B", "passwordEnv": "TEAM_B_PASSWORD"}
+      ]
+
+  }
+}

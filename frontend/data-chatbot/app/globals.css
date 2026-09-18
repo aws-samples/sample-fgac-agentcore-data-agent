@@ -1,0 +1,271 @@
+/* ═══════════════════════════════════════════════════
+   FGAC Data Agent — Design System
+   Aesthetic: Refined dark chrome + warm light canvas
+   ═══════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* Surface palette */
+  --surface-dark: #0c0f14;
+  --surface-dark-hover: #161a22;
+  --surface-dark-active: #1e2330;
+  --surface-sidebar: #111318;
+  --surface-chat: #fafaf9;
+  --surface-card: #ffffff;
+  --surface-input: #f4f4f3;
+  --surface-input-focus: #ffffff;
+
+  /* Border palette */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-light: #e8e6e3;
+  --border-medium: #d4d1cc;
+
+  /* Text palette */
+  --text-primary: #1a1a19;
+  --text-secondary: #6b6966;
+  --text-muted: #9c9893;
+  --text-on-dark: #e8e6e3;
+  --text-on-dark-muted: rgba(255, 255, 255, 0.45);
+
+  /* Accent */
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-soft: rgba(37, 99, 235, 0.1);
+  --accent-glow: rgba(37, 99, 235, 0.15);
+
+  /* Status */
+  --error: #dc2626;
+  --error-soft: #fef2f2;
+  --warning: #d97706;
+  --success: #16a34a;
+
+  /* Typography */
+  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+
+  /* Spacing */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.12);
+}
+
+/* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--surface-chat);
+  color: var(--text-primary);
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.2); }
+
+/* ─── Animations ─── */
+@keyframes slideIn {
+  from { transform: translateX(20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ─── Markdown content inside chat bubbles ─── */
+.markdown-content {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+.markdown-content p {
+  margin: 0 0 10px 0;
+}
+.markdown-content p:last-child {
+  margin-bottom: 0;
+}
+.markdown-content ul,
+.markdown-content ol {
+  margin: 8px 0 12px 0;
+  padding-left: 22px;
+}
+.markdown-content li {
+  margin-bottom: 6px;
+}
+.markdown-content li p {
+  margin: 0;
+}
+.markdown-content strong {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.markdown-content code {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 12.5px;
+  font-family: var(--font-mono);
+  color: #c7254e;
+}
+.markdown-content pre {
+  background: var(--surface-dark);
+  color: var(--text-on-dark);
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  margin: 12px 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+.markdown-content pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+.markdown-content h1 {
+  margin: 18px 0 10px 0;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.3px;
+}
+.markdown-content h2 {
+  margin: 16px 0 8px 0;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.2px;
+}
+.markdown-content h3 {
+  margin: 14px 0 6px 0;
+  font-weight: 600;
+  font-size: 15px;
+}
+.markdown-content table {
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 14px 0;
+  font-size: 13px;
+  width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+}
+.markdown-content th,
+.markdown-content td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-light);
+}
+.markdown-content th {
+  background: #f1f5f9;
+  font-weight: 600;
+  color: #334155;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.markdown-content td {
+  background: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.markdown-content tr:last-child td {
+  border-bottom: none;
+}
+.markdown-content tr:nth-child(even) td {
+  background: #f8fafc;
+}
+.markdown-content blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 14px;
+  margin: 12px 0;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+.markdown-content hr {
+  border: none;
+  border-top: 1px solid var(--border-light);
+  margin: 14px 0;
+}
+
+/* ─── Amplify Authenticator overrides ─── */
+[data-amplify-authenticator] {
+  --amplify-components-authenticator-router-border-width: 0;
+  --amplify-components-authenticator-router-box-shadow: var(--shadow-lg);
+  font-family: var(--font-sans);
+}
+
+/* ─── Collapsible SQL query block ─── */
+.markdown-content details {
+  margin: 10px 0;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.markdown-content details summary {
+  padding: 8px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #f8fafc;
+  color: var(--text-secondary);
+  user-select: none;
+  list-style: none;
+}
+.markdown-content details summary::-webkit-details-marker {
+  display: none;
+}
+.markdown-content details summary::before {
+  content: "▶ ";
+  font-size: 10px;
+  transition: transform 0.15s;
+  display: inline-block;
+  margin-right: 4px;
+}
+.markdown-content details[open] summary::before {
+  transform: rotate(90deg);
+}
+.markdown-content details > *:not(summary) {
+  padding: 0 12px;
+}
+.markdown-content details pre {
+  margin: 8px 0 12px 0;
+}
