@@ -15,7 +15,7 @@
     "@aws-amplify/ui-react": "^6.5.5",
     "@aws-sdk/client-lambda": "^3.1017.0",
     "aws-amplify": "^6.6.6",
-    "next": "14.2.10",
+    "next": "15.5.24",
     "react": "^18",
     "react-dom": "^18",
     "react-markdown": "^10.1.0",
