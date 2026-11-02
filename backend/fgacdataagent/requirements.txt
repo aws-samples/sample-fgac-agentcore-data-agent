@@ -1872,9 +1872,9 @@ starlette==0.52.1 \
     #   bedrock-agentcore
     #   mcp
     #   sse-starlette
-strands-agents==1.23.0 \
-    --hash=sha256:76cb65e7c667d06334940843a5c4fd56baab7b11f5d9997ab8c250dcc3c1b403 \
-    --hash=sha256:85b528218b3bdf2629dd64926ec0a7dd1ce781e5466693310a9f55b67a41c3f9
+strands-agents==1.48.0 \
+    --hash=sha256:7118a644e844ab6ef77f4bc9883b7082b2e7a309bcd689cc5ef5345e07abcc9e \
+    --hash=sha256:bfbf5af9d8f1cb348b617d5f8d17b949ef3c3fdd74fa8c849f1fda46885449c2
     # via
     #   fgacdataagent
     #   strands-agents-tools
