@@ -1177,9 +1177,9 @@ opentelemetry-propagator-b3==1.33.1 \
     --hash=sha256:46bbe76d95ac7e1f50b263230aa1ce86445120f10c7008d66cb08266468561a3 \
     --hash=sha256:5c65708fbecb317ab4f1880e81f7bb0bf48caa2e1d52fe31f89d1cb86172a69c
     # via aws-opentelemetry-distro
-opentelemetry-propagator-jaeger==1.33.1 \
-    --hash=sha256:b4cd3f123a720db872401e2179f7384c70922a6b9bab2873f003419be82bb5e3 \
-    --hash=sha256:d5cfd139b245b32b45edda478b7be1fc52ecc93a199aa6ed7fd074086d81d083
+opentelemetry-propagator-jaeger==1.45.0 \
+    --hash=sha256:2c8461820845bf431d260e550eb17fedffd4de3b0edd467721013cbf063e8c89 \
+    --hash=sha256:73bea353e9560fc297a1fb8a86d6c29d70b4b2d362b88e7e96c382fcf77cfc38
     # via aws-opentelemetry-distro
 opentelemetry-propagator-ot-trace==0.54b1 \
     --hash=sha256:3c7885bdee37b28562e17cd8cb72747102fdccd9d4e557f5b4afb109092db829 \
